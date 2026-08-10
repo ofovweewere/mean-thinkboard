@@ -3,25 +3,28 @@ import { useNavigate, useParams, Link } from 'react-router'
 import { ArrowLeftIcon, LoaderIcon, Trash2Icon } from 'lucide-react'
 import toast from 'react-hot-toast'
 
-import api from '../lib/axios'
+import api from '../lib/axios.js'
+import PageNotFound from '../components/PageNotFound.jsx'
 
 const NoteDetailPage = () => {
   const [note, setNote] = useState(null)
+  const [noteNotFound, setNoteNotFound] = useState(false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const navigate = useNavigate()
 
   const { id } = useParams()
-  // console.log({ id }) //useful way to console log
 
   useEffect(() => {
     const fetchNote = async () => {
       try {
         const res = await api.get(`/notes/${id}`)
         setNote(res.data)
+        setNoteNotFound(false)
       } catch (error) {
         console.log('Error in fetching note', error)
         toast.error('Failed to fetch the note')
+        setNoteNotFound(true)
       } finally {
         setLoading(false)
       }
@@ -29,6 +32,10 @@ const NoteDetailPage = () => {
 
     fetchNote()
   }, [id])
+
+  if (noteNotFound) {
+    return <PageNotFound />
+  }
 
   const handleDelete = async () => {
     if (!window.confirm('Are you sure you want to delete this note?')) return
