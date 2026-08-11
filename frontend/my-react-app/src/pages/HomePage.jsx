@@ -41,15 +41,15 @@ const HomePage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-base-200 flex items-center justify-center">
+      <div className="grow bg-base-200 flex items-center justify-center">
         <LoaderIcon className="animate-spin size-10" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen">
-      <div className="mx-auto max-w-6xl p-4">
+    <div className="items-start flex flex-col flex-nowrap grow min-h-0">
+      <div className="mx-auto w-full max-w-6xl p-4">
         <div className="flex items-center justify-end">
           <div className="flex items-center gap-4">
             <Link to={'/create'} className="btn btn-primary">
@@ -60,16 +60,18 @@ const HomePage = () => {
         </div>
       </div>
       {isRateLimited && <RateLimitedUI />}
-      <div className="max-w-7xl mx-auto">
-        {notes.length === 0 && !isRateLimited && <NotesNotFound />}
-        {notes.length > 0 && !isRateLimited && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {notes.map((note) => (
-              <NoteCard key={note._id} note={note} setNotes={setNotes} />
-            ))}
-          </div>
-        )}
-      </div>
+      {!isRateLimited && (
+        <div className="max-w-7xl w-full mx-auto grow overflow-y-auto">
+          {notes.length === 0 && !isRateLimited && <NotesNotFound />}
+          {notes.length > 0 && !isRateLimited && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {notes.map((note) => (
+                <NoteCard key={note._id} note={note} setNotes={setNotes} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
